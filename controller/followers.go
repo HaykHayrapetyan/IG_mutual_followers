@@ -87,7 +87,7 @@ func FindAndStoreFollowers(c *gin.Context) {
 
 func FindCommon(c *gin.Context) {
 	var profiles request
-	if err := c.BindJSON(&profiles); err != nil {
+	if err := c.ShouldBindJSON(&profiles); err != nil {
 		fmt.Println("Error:", err)
 		c.String(http.StatusBadRequest, "Invalid JSON provided")
 		return
