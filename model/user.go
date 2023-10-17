@@ -1,10 +1,7 @@
 package model
 
 import (
-	"database/sql/driver"
 	"diary_api/database"
-	"encoding/json"
-	"errors"
 	"html"
 	"strings"
 
@@ -17,25 +14,8 @@ type User struct {
 	Username  string `gorm:"size:255;not null;unique" json:"username"`
 	Password  string `gorm:"size:255;not null;" json:"-"`
 	Entries   []Entry
-	Followers JSONB `gorm:"type:json"` //TODO find a way to change this to []Follower
+	Followers Followers `gorm:"type:json"` //TODO find a way to change this to []Follower
 	InstaId   string
-}
-
-// JSONB Interface for JSONB Field of yourTableName Table
-type JSONB []Follower
-
-// Value Marshal
-func (a JSONB) Value() (driver.Value, error) {
-	return json.Marshal(a)
-}
-
-// Scan Unmarshal
-func (a *JSONB) Scan(value interface{}) error {
-	b, ok := value.([]byte)
-	if !ok {
-		return errors.New("type assertion to []byte failed")
-	}
-	return json.Unmarshal(b, &a)
 }
 
 func (user *User) Save() (*User, error) {

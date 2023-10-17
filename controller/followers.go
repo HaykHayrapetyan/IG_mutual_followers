@@ -43,6 +43,11 @@ func FindFollowers(c *gin.Context) {
 		return
 	}
 
+	if len(user.Followers) != 0 {
+		c.JSON(http.StatusOK, gin.H{"data": user.Followers})
+		return
+	}
+
 	var userFollower []model.Follower
 	findFollowersRequest(user.InstaId, &userFollower)
 	c.JSON(http.StatusBadRequest, gin.H{"data": userFollower})
@@ -71,8 +76,12 @@ func FindAndStoreFollowers(c *gin.Context) {
 		return
 	}
 
-	var userFollower []model.Follower
+	if len(user.Followers) != 0 {
+		c.JSON(http.StatusOK, gin.H{"data": user.Followers})
+		return
+	}
 
+	var userFollower []model.Follower
 	findFollowersRequest(user.InstaId, &userFollower)
 
 	if err := user.SaveFollowers(userFollower); err != nil {
